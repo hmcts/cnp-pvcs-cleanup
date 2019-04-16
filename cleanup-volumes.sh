@@ -45,8 +45,8 @@ kubectl get namespace -o json | jq -r '.items[] | .metadata.name' >> $fullPathNa
 
 #Get Pvcs in a given namespace
 function getPvcs(){
-	namespace=$1
-	kubectl get pvc -o json -n $namespace | jq -r '.items[].metadata.name' | grep -v null | sort | uniq
+  namespace=$1
+  kubectl get pvc -o json -n $namespace | jq -r '.items[].metadata.name' | grep -v null | sort | uniq
 }
 
 #Stats function
@@ -70,8 +70,8 @@ checkStats fullPathBeforeStatsFile
 
 #Fetch all pvcs in use by a pod in a namespace
 function getActivePvcs(){
-	namespace=$1
-	kubectl get pods -o json -n $namespace | jq -r '.items[].spec.volumes[]?.persistentVolumeClaim.claimName' | grep -v null | sort | uniq
+  namespace=$1
+  kubectl get pods -o json -n $namespace | jq -r '.items[].spec.volumes[]?.persistentVolumeClaim.claimName' | grep -v null | sort | uniq
 }
 
 echo "Fetching all active pvcs in use by pod & write them in files - started"
@@ -138,14 +138,14 @@ echo "Generating pvcs to delete - done"
 #Delete all qualified pvcs
 echo "Deleting pvcs - started"
 while read namespace; do
-	deleteFile=$tempDir/$namespace-$deletePvcFilename
-	if [ -f $deleteFile ]
-	then
-		while read pvcName; do
-			echo $namespace " => " $pvcName
-			kubectl delete pvc $pvcName -n $namespace
-		done < $deleteFile
-	fi  
+deleteFile=$tempDir/$namespace-$deletePvcFilename
+  if [ -f $deleteFile ]
+  then
+    while read pvcName; do
+	  echo $namespace " => " $pvcName
+	  kubectl delete pvc $pvcName -n $namespace
+	done < $deleteFile
+  fi
 done < $fullPathCandidateNamespacesFile
 echo "Deleting pvcs - done"
 
