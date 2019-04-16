@@ -143,7 +143,7 @@ while read namespace; do
 	then
 		while read pvcName; do
 			echo $namespace " => " $pvcName
-			#kubectl delete pvc $pvcName -n $namespace
+			kubectl delete pvc $pvcName -n $namespace
 		done < $deleteFile
 	fi  
 done < $fullPathCandidateNamespacesFile
